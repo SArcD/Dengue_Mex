@@ -9,7 +9,10 @@ archivos = {
     '2017': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2017.xlsx?raw=true',
     '2018': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2018.xlsx?raw=true',
     '2019': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2019.xlsx?raw=true',
-    # Añadir más años según sea necesario
+    '2020': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2020.xlsx?raw=true',
+    '2021': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2021.xlsx?raw=true',
+    '2022': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2022.xlsx?raw=true',
+    '2023': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2023.xlsx?raw=true'
 }
 
 def cargar_datos(url):
@@ -28,31 +31,12 @@ if 'data' not in st.session_state:
 # Selector de estado
 estado_seleccionado = st.sidebar.selectbox('Seleccione un Estado:', pd.concat(st.session_state.data.values())['Estado'].unique())
 
-# Selector de variable de interés
-if st.session_state.data:
-    # Asumiendo que todas las tablas tienen las mismas columnas, puedes usar las de cualquier año
-    variables_disponibles = list(st.session_state.data[next(iter(st.session_state.data))].columns)
-    variable_seleccionada = st.sidebar.selectbox('Seleccione la variable de interés:', variables_disponibles)
-
-    # Crear un DataFrame para almacenar los datos de la variable seleccionada a través de los años
-    valores_por_año = []
-
-    for year, df in st.session_state.data.items():
-        if not df.empty and variable_seleccionada in df.columns:
-            valor = df.loc[df['Estado'] == estado_seleccionado, variable_seleccionada]
-            if not valor.empty:
-                valores_por_año.append((year, valor.values[0]))
-            else:
-                valores_por_año.append((year, None))
-
-    valores_df = pd.DataFrame(valores_por_año, columns=['Año', variable_seleccionada])
-    st.write(f"Valores de '{variable_seleccionada}' para {estado_seleccionado} a lo largo de los años:")
-    st.dataframe(valores_df.set_index('Año'))
-
-    # Histograma de la variable a lo largo de los años
-    fig, ax = plt.subplots()
-    ax.hist(valores_df[variable_seleccionada].dropna(), bins=10, alpha=0.75)
-    ax.set_title(f'Histograma de {variable_seleccionada}')
-    ax.set_xlabel('Valores')
-    ax.set_ylabel('Frecuencia')
-    st.pyplot(fig)
+# Mostrar los datos de cada año para el estado seleccionado
+for year, df in st.session_state.data.items():
+    if not df.empty:
+        st.write(f"Datos para el año {year}:")
+        fila_seleccionada = df[df['Estado'] == estado_seleccionado]
+        if not fila_seleccionada.empty:
+            st.dataframe(fila_seleccionada)
+        else:
+            st.write(f"No hay datos para {estado_seleccionado} en {year}.")
