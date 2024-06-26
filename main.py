@@ -5,7 +5,8 @@ import pandas as pd
 años = ['2017', '2018', '2019']
 
 # URL base donde están alojados los archivos en GitHub
-url_base = 'https://github.com/username/repo/blob/main/path/to/your/Dengue_{}.xlsx?raw=true'
+# Asegúrate de reemplazar los segmentos necesarios para adaptarlo a los diferentes años.
+url_base = 'https://github.com/SArcD/Dengue_Mex/blob/9f745cc171fc6ba519c276a129b60c51028b482e/Dengue_{}.xlsx?raw=true'
 
 # Crear un selector en la barra lateral para elegir el año
 año_seleccionado = st.sidebar.selectbox('Seleccione el año:', años)
@@ -21,9 +22,3 @@ if st.sidebar.button('Cargar Datos'):
     df = cargar_datos(año_seleccionado)
     st.write(f"Datos para el año {año_seleccionado}:")
     st.dataframe(df)
-
-# Puedes también mostrar los datos directamente sin necesidad de un botón
-# df = cargar_datos(año_seleccionado)
-# st.write(f"Datos para el año {año_seleccionado}:")
-# st.dataframe(df)
-
