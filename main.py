@@ -87,6 +87,19 @@ if st.session_state.df is not None:
             else:
                 st.write(f"No hay datos para {estado_seleccionado} en {year}.")
 
+
+    valores_df = pd.DataFrame(valores_por_año, columns=['Año', variable_seleccionada])
+    st.write(f"Valores de '{variable_seleccionada}' para {estado_seleccionado} a lo largo de los años:")
+    st.dataframe(valores_df.set_index('Año'))
+
+    # Histograma de la variable a lo largo de los años
+    fig, ax = plt.subplots()
+    ax.hist(valores_df[variable_seleccionada].dropna(), bins=10, alpha=0.75)
+    ax.set_title(f'Histograma de {variable_seleccionada}')
+    ax.set_xlabel('Valores')
+    ax.set_ylabel('Frecuencia')
+    st.pyplot(fig)
+
     
 
 
