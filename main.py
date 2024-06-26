@@ -56,12 +56,16 @@ if not valores_df[variable_seleccionada].dropna().empty:
     ax.set_ylabel('Frecuencia')
     st.pyplot(fig)
 
-    # Gráfico de cajas
+# Gráfico de cajas
+if not valores_df[variable_seleccionada].dropna().empty:
     fig, ax = plt.subplots()
-    ax.boxplot(valores_df[variable_seleccionada].dropna(), labels=valores_df['Año'][valores_df[variable_seleccionada].notna()])
+    # Filtrar solo los años con datos no nulos
+    datos_no_nulos = valores_df[variable_seleccionada].dropna()
+    años_no_nulos = valores_df['Año'][valores_df[variable_seleccionada].notna()]
+    ax.boxplot(datos_no_nulos, labels=años_no_nulos)
     ax.set_title(f'Gráfico de caja de {variable_seleccionada} por año para {estado_seleccionado}')
     ax.set_ylabel(variable_seleccionada)
     ax.set_xlabel('Año')
     st.pyplot(fig)
 else:
-    st.write("No hay datos suficientes para mostrar el gráfico de cajas o el histograma.")
+    st.write("No hay datos suficientes para mostrar el gráfico de cajas.")
