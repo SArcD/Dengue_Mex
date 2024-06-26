@@ -63,6 +63,10 @@ if st.session_state.df is not None:
         st.pyplot(fig)
 
 
+    # Cargar todos los DataFrames una vez y almacenarlos en el estado de sesión
+    if 'data' not in st.session_state:
+        st.session_state.data = {year: cargar_datos(url) for year, url in archivos.items()}
+
     # Selección de un valor específico de la columna 'Estado'
     if 'Estado' in st.session_state.df.columns:
         estados_disponibles = st.session_state.df['Estado'].unique()
@@ -72,3 +76,18 @@ if st.session_state.df is not None:
         fila_seleccionada = st.session_state.df[st.session_state.df['Estado'] == estado_seleccionado]
         st.write('Fila seleccionada:')
         st.dataframe(fila_seleccionada)
+        
+    # Mostrar los datos de cada año para el estado seleccionado
+    for year, df in st.session_state.data.items():
+        if not df.empty:
+            st.write(f"Datos para el año {year}:")
+            fila_seleccionada = df[df['Estado'] == estado_seleccionado]
+            if not fila_seleccionada.empty:
+                st.dataframe(fila_seleccionada)
+            else:
+                st.write(f"No hay datos para {estado_seleccionado} en {year}.")
+
+    
+
+
+
