@@ -61,3 +61,20 @@ if st.session_state.df is not None:
             ax.set_ylabel('Frecuencia')
             ax.legend()
         st.pyplot(fig)
+
+# Cargar todos los DataFrames una vez y almacenarlos en el estado de sesión
+if 'data' not in st.session_state:
+    st.session_state.data = {year: cargar_datos(url) for year, url in archivos.items()}
+
+# Selector de estado
+estado_seleccionado = st.sidebar.selectbox('Seleccione un Estado:', pd.concat(st.session_state.data.values())['Estado'].unique())
+
+# Mostrar los datos de cada año para el estado seleccionado
+for year, df in st.session_state.data.items():
+    if not df.empty:
+        st.write(f"Datos para el año {year}:")
+        fila_seleccionada = df[df['Estado'] == estado_seleccionado]
+        if not fila_seleccionada.empty:
+            st.dataframe(fila_seleccionada)
+        else:
+            st.write(f"No hay datos para {estado_seleccionado} en {year}.")
