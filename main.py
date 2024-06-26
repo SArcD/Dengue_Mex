@@ -61,3 +61,14 @@ if st.session_state.df is not None:
             ax.set_ylabel('Frecuencia')
             ax.legend()
         st.pyplot(fig)
+
+
+    # Selección de un valor específico de la columna 'Estado'
+    if 'Estado' in st.session_state.df.columns:
+        estados_disponibles = st.session_state.df['Estado'].unique()
+        estado_seleccionado = st.selectbox('Seleccione un Estado:', estados_disponibles)
+        
+        # Mostrar la fila correspondiente al Estado seleccionado
+        fila_seleccionada = st.session_state.df[st.session_state.df['Estado'] == estado_seleccionado]
+        st.write('Fila seleccionada:')
+        st.dataframe(fila_seleccionada)
