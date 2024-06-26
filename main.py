@@ -1,4 +1,3 @@
-import streamlit as st
 import pandas as pd
 
 # Definir los años disponibles para los archivos
