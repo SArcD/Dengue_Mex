@@ -7,10 +7,7 @@ matplotlib
 altair
 altair_catplot
 xlsxwriter
-datapane
-seaborn
 openpyxl
-googletrans
 textblob
 scikit-learn
 graphviz
