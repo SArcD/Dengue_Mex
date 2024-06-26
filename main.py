@@ -1,23 +1,27 @@
+import streamlit as st
 import pandas as pd
 
-# Definir los años disponibles para los archivos
-años = ['2017', '2018', '2019']
-
-# URL base donde están alojados los archivos en GitHub
-# Asegúrate de reemplazar los segmentos necesarios para adaptarlo a los diferentes años.
-url_base = 'https://github.com/SArcD/Dengue_Mex/blob/9f745cc171fc6ba519c276a129b60c51028b482e/Dengue_{}.xlsx?raw=true'
+# Definir los años disponibles para los archivos y sus URLs correspondientes
+archivos = {
+    '2017': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2017.xlsx?raw=true',
+    '2018': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2018.xlsx?raw=true',
+    '2019': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2019.xlsx?raw=true',
+    '2020': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2020.xlsx?raw=true',
+    '2021': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2021.xlsx?raw=true',
+    '2022': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2022.xlsx?raw=true',
+    '2023': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2023.xlsx?raw=true'
+}
 
 # Crear un selector en la barra lateral para elegir el año
-año_seleccionado = st.sidebar.selectbox('Seleccione el año:', años)
+año_seleccionado = st.sidebar.selectbox('Seleccione el año:', list(archivos.keys()))
 
 # Función para cargar los datos desde GitHub
-def cargar_datos(año):
-    url = url_base.format(año)
+def cargar_datos(url):
     df = pd.read_excel(url, engine='openpyxl')
     return df
 
 # Botón para cargar los datos
 if st.sidebar.button('Cargar Datos'):
-    df = cargar_datos(año_seleccionado)
+    df = cargar_datos(archivos[año_seleccionado])
     st.write(f"Datos para el año {año_seleccionado}:")
     st.dataframe(df)
