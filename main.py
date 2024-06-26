@@ -38,6 +38,11 @@ if st.session_state.df is not None:
     filas, columnas = st.session_state.df.shape
     st.text(f"El DataFrame tiene {filas} filas y {columnas} columnas.")
 
+    # Mostrar un resumen estadístico del DataFrame
+    if st.button('Mostrar resumen estadístico'):
+        st.write('Resumen Estadístico:')
+        st.dataframe(st.session_state.df.describe())
+    
     # Permitir al usuario seleccionar las columnas para el histograma
     columnas_seleccionadas = st.multiselect('Seleccione las columnas para el histograma:', st.session_state.df.columns)
 
