@@ -87,6 +87,7 @@ if st.session_state.df is not None:
             else:
                 st.write(f"No hay datos para {estado_seleccionado} en {year}.")
 
+    variable_seleccionada = st.sidebar.selectbox('Seleccione la variable de interés:', variables_disponibles)
 
     # Crear un DataFrame para almacenar los datos de la variable seleccionada a través de los años
     valores_por_año = []
