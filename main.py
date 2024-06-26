@@ -9,13 +9,9 @@ archivos = {
     '2017': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2017.xlsx?raw=true',
     '2018': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2018.xlsx?raw=true',
     '2019': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2019.xlsx?raw=true',
-    '2020': 'https://github.com/SArcD/Dengue_Mex/blob/5211982d4dbea53b2d6a6e4ccee5e06fa1717d1f/Dengue_2020.xlsx?raw=true',
+    # Añadir más años según sea necesario
 }
 
-# Crear un selector en la barra lateral para elegir el año
-año_seleccionado = st.sidebar.selectbox('Seleccione el año:', list(archivos.keys()))
-
-# Función para cargar los datos desde GitHub
 def cargar_datos(url):
     response = requests.get(url)
     if response.status_code == 200:
@@ -23,8 +19,7 @@ def cargar_datos(url):
         df = pd.read_excel(excel_data, engine='openpyxl')
         return df
     else:
-        st.error("Error al cargar el archivo: HTTP Status " + str(response.status_code))
-        return None
+        return pd.DataFrame()  # Devuelve un DataFrame vacío en caso de error
 
 # Cargar todos los DataFrames una vez y almacenarlos en el estado de sesión
 if 'data' not in st.session_state:
@@ -70,6 +65,3 @@ if not valores_df[variable_seleccionada].dropna().empty:
     st.pyplot(fig)
 else:
     st.write("No hay datos suficientes para mostrar el gráfico de cajas o el histograma.")
-
-
-
