@@ -88,6 +88,17 @@ if st.session_state.df is not None:
                 st.write(f"No hay datos para {estado_seleccionado} en {year}.")
 
 
+    # Crear un DataFrame para almacenar los datos de la variable seleccionada a través de los años
+    valores_por_año = []
+
+    for year, df in st.session_state.data.items():
+        if not df.empty and variable_seleccionada in df.columns:
+            valor = df.loc[df['Estado'] == estado_seleccionado, variable_seleccionada]
+            if not valor.empty:
+                valores_por_año.append((year, valor.values[0]))
+            else:
+                valores_por_año.append((year, None))
+
     valores_df = pd.DataFrame(valores_por_año, columns=['Año', variable_seleccionada])
     st.write(f"Valores de '{variable_seleccionada}' para {estado_seleccionado} a lo largo de los años:")
     st.dataframe(valores_df.set_index('Año'))
@@ -99,8 +110,6 @@ if st.session_state.df is not None:
     ax.set_xlabel('Valores')
     ax.set_ylabel('Frecuencia')
     st.pyplot(fig)
-
-    
 
 
 
