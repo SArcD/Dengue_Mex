@@ -26,46 +26,33 @@ if 'data' not in st.session_state:
     st.session_state.data = {year: cargar_datos(url) for year, url in archivos.items()}
 
 # Selector de estado
-estado_seleccionado = st.sidebar.selectbox('Seleccione un Estado:', pd.concat([df['Estado'] for df in st.session_state.data.values() if 'Estado' in df.columns]).unique())
+estado_seleccionado = st.sidebar.selectbox('Seleccione un Estado:', pd.concat(st.session_state.data.values())['Estado'].unique())
 
 # Selector de variable de interés
-variables_disponibles = list(st.session_state.data[next(iter(st.session_state.data))].columns)
-variable_seleccionada = st.sidebar.selectbox('Seleccione la variable de interés:', variables_disponibles)
+if st.session_state.data:
+    # Asumiendo que todas las tablas tienen las mismas columnas, puedes usar las de cualquier año
+    variables_disponibles = list(st.session_state.data[next(iter(st.session_state.data))].columns)
+    variable_seleccionada = st.sidebar.selectbox('Seleccione la variable de interés:', variables_disponibles)
 
-# Crear un DataFrame para almacenar los datos de la variable seleccionada a través de los años
-valores_por_año = []
+    # Crear un DataFrame para almacenar los datos de la variable seleccionada a través de los años
+    valores_por_año = []
 
-for year, df in st.session_state.data.items():
-    if not df.empty and variable_seleccionada in df.columns and 'Estado' in df.columns:
-        valor = df[df['Estado'] == estado_seleccionado][variable_seleccionada].dropna()
-        if not valor.empty:
-            valores_por_año.append((year, valor.values[0]))
-        else:
-            valores_por_año.append((year, None))
+    for year, df in st.session_state.data.items():
+        if not df.empty and variable_seleccionada in df.columns:
+            valor = df.loc[df['Estado'] == estado_seleccionado, variable_seleccionada]
+            if not valor.empty:
+                valores_por_año.append((year, valor.values[0]))
+            else:
+                valores_por_año.append((year, None))
 
-valores_df = pd.DataFrame(valores_por_año, columns=['Año', variable_seleccionada])
-st.write(f"Valores de '{variable_seleccionada}' para {estado_seleccionado} a lo largo de los años:")
-st.dataframe(valores_df.set_index('Año'))
+    valores_df = pd.DataFrame(valores_por_año, columns=['Año', variable_seleccionada])
+    st.write(f"Valores de '{variable_seleccionada}' para {estado_seleccionado} a lo largo de los años:")
+    st.dataframe(valores_df.set_index('Año'))
 
-# Histograma de la variable a lo largo de los años
-if not valores_df[variable_seleccionada].dropna().empty:
+    # Histograma de la variable a lo largo de los años
     fig, ax = plt.subplots()
     ax.hist(valores_df[variable_seleccionada].dropna(), bins=10, alpha=0.75)
     ax.set_title(f'Histograma de {variable_seleccionada}')
     ax.set_xlabel('Valores')
     ax.set_ylabel('Frecuencia')
     st.pyplot(fig)
-
-# Gráfico de cajas
-if not valores_df[variable_seleccionada].dropna().empty:
-    fig, ax = plt.subplots()
-    # Filtrar solo los años con datos no nulos
-    datos_no_nulos = valores_df[variable_seleccionada].dropna()
-    años_no_nulos = valores_df['Año'][valores_df[variable_seleccionada].notna()]
-    ax.boxplot(datos_no_nulos, labels=años_no_nulos)
-    ax.set_title(f'Gráfico de caja de {variable_seleccionada} por año para {estado_seleccionado}')
-    ax.set_ylabel(variable_seleccionada)
-    ax.set_xlabel('Año')
-    st.pyplot(fig)
-else:
-    st.write("No hay datos suficientes para mostrar el gráfico de cajas.")
