@@ -44,13 +44,15 @@ if st.session_state.df is not None:
     # Deslizador para definir el tamaño de los bins
     num_bins = st.slider('Seleccione el número de bins para el histograma:', min_value=1, max_value=50, value=10)
 
-    # Botón para generar el histograma
-    if st.button('Generar Histograma'):
-        fig, ax = plt.subplots()
-        for col in columnas_seleccionadas:
-            ax.hist(st.session_state.df[col].dropna(), bins=num_bins, alpha=0.5, label=col)
-        ax.set_title('Histograma')
-        ax.set_xlabel('Valor')
-        ax.set_ylabel('Frecuencia')
-        ax.legend()
+    # Generar histograma si hay columnas seleccionadas
+    if columnas_seleccionadas:
+        fig, axs = plt.subplots(len(columnas_seleccionadas), figsize=(10, 5 * len(columnas_seleccionadas)))
+        if len(columnas_seleccionadas) == 1:  # Cuando solo hay una columna seleccionada, axs no es una lista
+            axs = [axs]
+        for ax, col in zip(axs, columnas_seleccionadas):
+            ax.hist(st.session_state.df[col].dropna(), bins=num_bins, alpha=0.7, label=f'Histograma de {col}')
+            ax.set_title(f'Histograma de {col}')
+            ax.set_xlabel('Valores')
+            ax.set_ylabel('Frecuencia')
+            ax.legend()
         st.pyplot(fig)
