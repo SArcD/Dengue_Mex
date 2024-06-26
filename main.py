@@ -25,3 +25,7 @@ if st.sidebar.button('Cargar Datos'):
     df = cargar_datos(archivos[año_seleccionado])
     st.write(f"Datos para el año {año_seleccionado}:")
     st.dataframe(df)
+
+    # Mostrar las dimensiones del DataFrame
+    filas, columnas = df.shape
+    st.text(f"El DataFrame tiene {filas} filas y {columnas} columnas.")
