@@ -113,5 +113,17 @@ if st.session_state.df is not None:
     ax.set_ylabel('Frecuencia')
     st.pyplot(fig)
 
+    # Verificar si hay datos para mostrar
+    if any(len(data) > 0 for data in valores_por_año.values()):
+        # Crear el gráfico de cajas
+        fig, ax = plt.subplots()
+        ax.boxplot([data for data in valores_por_año.values() if len(data) > 0], labels=[year for year, data in valores_por_año.items() if len(data) > 0])
+        ax.set_title(f'Gráfico de caja de {variable_seleccionada} por año para {estado_seleccionado}')
+        ax.set_ylabel(variable_seleccionada)
+        ax.set_xlabel('Año')
+        st.pyplot(fig)
+    else:
+        st.write("No hay datos suficientes para mostrar el gráfico de cajas.")
+
 
 
